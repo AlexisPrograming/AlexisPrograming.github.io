@@ -1,8 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3'
-import path from 'path'
-
-const dbPath = path.join(process.cwd(), 'dev.db')
+import { PrismaNeon } from '@prisma/adapter-neon'
 
 declare global {
   // eslint-disable-next-line no-var
@@ -10,7 +7,7 @@ declare global {
 }
 
 function createPrismaClient() {
-  const adapter = new PrismaBetterSqlite3({ url: `file:${dbPath}` })
+  const adapter = new PrismaNeon({ connectionString: process.env.DATABASE_URL! })
   return new PrismaClient({ adapter })
 }
 
