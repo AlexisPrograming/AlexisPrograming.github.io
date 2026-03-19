@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import db from '@/lib/db'
+import { sendVerificationEmail } from '@/lib/email'
+
+function generateCode() {
+  return Math.floor(100000 + Math.random() * 900000).toString()
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,11 +21,16 @@ export async function POST(request: NextRequest) {
     }
 
     const hashed = await bcrypt.hash(password, 12)
-    const user = await db.user.create({
-      data: { name, email, password: hashed },
+    const code = generateCode()
+    const expiry = new Date(Date.now() + 15 * 60 * 1000)
+
+    await db.user.create({
+      data: { name, email, password: hashed, verifyCode: code, verifyExpiry: expiry },
     })
 
-    return NextResponse.json({ id: user.id, email: user.email, name: user.name })
+    await sendVerificationEmail(email, name, code)
+
+    return NextResponse.json({ ok: true })
   } catch {
     return NextResponse.json({ error: 'Registration failed' }, { status: 500 })
   }
