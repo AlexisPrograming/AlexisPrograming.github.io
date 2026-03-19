@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 export default function AuthPage() {
   const [mode, setMode] = useState<'login' | 'register'>('login')
   const [form, setForm] = useState({ name: '', email: '', password: '' })
+  const [remember, setRemember] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const router = useRouter()
@@ -24,7 +25,7 @@ export default function AuthPage() {
         const data = await res.json()
         if (!res.ok) { setError(data.error); setLoading(false); return }
       }
-      const result = await signIn('credentials', { email: form.email, password: form.password, redirect: false })
+      const result = await signIn('credentials', { email: form.email, password: form.password, remember: String(remember), redirect: false })
       if (result?.error) { setError('Invalid credentials'); setLoading(false); return }
       router.push('/dashboard')
     } catch {
@@ -92,6 +93,13 @@ export default function AuthPage() {
                 placeholder="••••••••" required minLength={6}
                 className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition bg-white" />
             </div>
+            {mode === 'login' && (
+              <label className="flex items-center gap-2 cursor-pointer select-none">
+                <input type="checkbox" checked={remember} onChange={e => setRemember(e.target.checked)}
+                  className="w-4 h-4 rounded border-gray-300 text-indigo-600 accent-indigo-600" />
+                <span className="text-sm text-gray-600">Remember me for 30 days</span>
+              </label>
+            )}
             {error && <div className="p-3 rounded-lg bg-red-50 border border-red-100 text-red-600 text-sm">{error}</div>}
             <button type="submit" disabled={loading}
               className="w-full py-2.5 rounded-xl bg-indigo-600 text-white font-medium text-sm hover:bg-indigo-700 transition disabled:opacity-50">
