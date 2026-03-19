@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npx prisma:*)",
+      "Bash(node:*)",
+      "Bash(mkdir -p D:/brand-new-webside/focusflow/app/api/auth/[...nextauth])",
+      "Bash(mkdir -p D:/brand-new-webside/focusflow/app/api/tasks/[id])",
+      "Bash(mkdir -p D:/brand-new-webside/focusflow/app/api/habits/[id]/complete)",
+      "Bash(mkdir -p D:/brand-new-webside/focusflow/app/api/expenses/[id])",
+      "Bash(ls:*)",
+      "Bash(npx next:*)"
+    ]
+  }
+}
