@@ -18,10 +18,10 @@ export default async function DashboardPage() {
     db.focusSession.findMany({ where: { userId, date: today } }),
   ])
 
-  const todayFocusMinutes = focusSessions.reduce((s: number, f: { duration: number }) => s + f.duration, 0)
+  const todayFocusMinutes = focusSessions.reduce((s, f) => s + f.duration, 0)
   const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate() - 7)
-  const weekExpenses = expenses.filter((e: { date: string }) => new Date(e.date) >= weekAgo)
-  const weekTotal = weekExpenses.reduce((s: number, e: { amount: number }) => s + e.amount, 0)
+  const weekExpenses = expenses.filter(e => new Date(e.date) >= weekAgo)
+  const weekTotal = weekExpenses.reduce((s, e) => s + e.amount, 0)
   const habitsCompletedToday = habits.filter(h => h.completions.length > 0).length
 
   return (
